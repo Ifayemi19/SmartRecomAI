@@ -18,7 +18,7 @@ def _model_for(agent_key: str) -> str:
     llm = (cfg.get("llm") or "").strip()
     if llm.startswith("groq/"):
         return llm.split("/", 1)[1]
-    return "meta-llama/llama-4-maverick-17b-128e-instruct")
+    return "meta-llama/llama-4-maverick-17b-128e-instruct"
 
 def get_llm(agent_key: str):
     #api_key = os.environ.get("GROQ_API_KEY")
