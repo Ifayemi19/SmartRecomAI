@@ -34,7 +34,7 @@ Erreur: {}""".format(CREW_IMPORT_ERROR)
 # ---- Page ----
 st.set_page_config(page_title="SmartRecomAI (Groq)", page_icon="📚", layout="wide")
 
-st.markdown("###📚 SmartRecomAI")
+st.markdown("### 📚 SmartRecomAI")
 st.caption("Discutez de vos goûts, demandez des titres similaires, ou utilisez votre user_id.")
 
 # ---- État de session ----
