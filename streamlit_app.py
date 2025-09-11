@@ -1,5 +1,14 @@
 # streamlit_app.py — UI ultra-minimal (Groq-only, SANS health)
 from __future__ import annotations
+# ---- sqlite3 shim pour Chroma (sqlite >= 3.35) ----
+try:
+    import sys
+    import pysqlite3  # fourni par pysqlite3-binary
+    sys.modules["sqlite3"] = pysqlite3
+except Exception:
+    pass
+# ---------------------------------------------------
+
 import os, traceback
 import streamlit as st
 from dotenv import load_dotenv
