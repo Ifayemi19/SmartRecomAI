@@ -1,5 +1,11 @@
 # api/main.py
 from __future__ import annotations
+try:
+    import sys
+    import pysqlite3  # fourni par pysqlite3-binary
+    sys.modules["sqlite3"] = pysqlite3
+except Exception:
+    pass
 import os, math, re, difflib
 from typing import Optional, Dict, Any, List, Tuple
 from fastapi import FastAPI, Query, HTTPException
