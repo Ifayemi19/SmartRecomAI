@@ -1,6 +1,7 @@
 # agents/llm.py — lit config/agents.yaml pour choisir le modèle
 import os, yaml
 from langchain_groq import ChatGroq
+import streamlit as st
 
 _BASE = os.path.dirname(os.path.dirname(__file__))
 
@@ -17,10 +18,11 @@ def _model_for(agent_key: str) -> str:
     llm = (cfg.get("llm") or "").strip()
     if llm.startswith("groq/"):
         return llm.split("/", 1)[1]
-    return os.environ.get("LLM_MODEL", "llama-3.1-70b-versatile")
+    return "meta-llama/llama-4-maverick-17b-128e-instruct")
 
 def get_llm(agent_key: str):
-    api_key = os.environ.get("GROQ_API_KEY")
+    #api_key = os.environ.get("GROQ_API_KEY")
+    api_key = st.secrets["GROQ_API_KEY"]
     if not api_key:
         raise RuntimeError("GROQ_API_KEY manquant dans l'environnement.")
     return ChatGroq(model=_model_for(agent_key), temperature=0.2)

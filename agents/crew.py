@@ -2,7 +2,7 @@
 from __future__ import annotations
 import os
 from crewai import Agent, Crew, Process, Task, LLM
-
+import streamlit as st
 # Tools basées sur api/service.py (pas d'appels HTTP)
 from agents.tools import (
     SimilarByIdTool,
@@ -15,7 +15,7 @@ from agents.tools import (
 )
 
 # Clé Groq (depuis .env ou environnement)
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 
 def _groq_llm(temp: float = 0.1) -> LLM:
     return LLM(model="groq/meta-llama/llama-4-maverick-17b-128e-instruct",temperature=temp,api_key=GROQ_API_KEY)
