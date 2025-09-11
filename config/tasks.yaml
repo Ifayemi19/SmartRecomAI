@@ -1,0 +1,37 @@
+router_task:
+  description: >
+    Lis la question: "{question}".
+    Choisis UNE SEULE option parmi: by_id | by_title | search | collab | hybrid | details | general.
+    Règles:
+    - 'by_id'    : si la question mentionne explicitement un id de livre (ex: id=42, book_id 42).
+    - 'by_title' : si un titre de livre est donné pour trouver des similaires.
+    - 'search'   : si l’utilisateur décrit des thèmes/genres/auteurs en langage libre sans id/titre précis.
+    - 'collab'   : si un user_id est donné pour des recos collaboratives.
+    - 'hybrid'   : si un user_id est donné et l’utilisateur veut un mix collab+contenu.
+    - 'details'  : si l’utilisateur veut la fiche d’un livre donné par id (détails).
+    - 'general'  : toute autre question généraliste qui ne demande aucun appel à l’API livres.
+    IMPORTANT:
+    - Réponds avec UN SEUL MOT en minuscules, SANS AUCUN AUTRE TEXTE.
+  expected_output: >
+    Un seul mot-clé: by_id | by_title | search | collab | hybrid | details | general
+  agent: router_Agent
+
+retriever_task:
+  description: >
+    Tu reçois la sortie du router (un seul mot-clé).
+    Agis en conséquence pour répondre à la question "{question}" :
+    - Si 'by_id'   : appeler similar_items_by_id (top_k=10, include_seed=false, details=true), puis retourner EXACTEMENT 3 recommandations (les 3 premières), formatées.
+    - Si 'by_title': appeler similar_items_by_title (top_k=10, include_seed=false, details=true), puis retourner EXACTEMENT 3 recommandations.
+    - Si 'search'  : appeler search_content (mode=tfidf, top_k=10, details=true), puis retourner EXACTEMENT 3 recommandations.
+    - Si 'collab'  : appeler collab_user (top_k=10, exclude_seen=true, details=true), puis retourner EXACTEMENT 3 recommandations.
+    - Si 'hybrid'  : appeler hybrid_user (alpha=0.6, top_k=10, details=true), puis retourner EXACTEMENT 3 recommandations.
+    - Si 'details' : appeler item_details et retourner une fiche concise (titre, auteur, langue, note, résumé si dispo).
+    - Si 'general' : utiliser generation_tool pour répondre sans appeler d’API.
+    Présentation pour les listes:
+    - Toujours lister 3 livres par défaut, sauf si l’utilisateur a demandé un autre nombre.
+    - Format par ligne: "• Titre — Auteur(s) — ★note (facultatif) — Pourquoi adapté".
+    - Si un champ manque, ne bloque pas; affiche ce que tu as.
+    - Si aucune donnée, explique clairement.
+  expected_output: >
+    Une réponse claire. Pour les recos: 3 lignes-bullets, chacune avec Titre — Auteur(s) — raison.
+  agent: retriever_Agent
